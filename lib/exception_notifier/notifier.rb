@@ -75,7 +75,7 @@ class ExceptionNotifier
         @options = (@notifier.args.first || {}).reverse_merge(self.class.default_options)
         @exception = exception
         @backtrace = exception.backtrace || []
-        @additional_context = additional
+        @additional_context = additional.stringify_keys
         @sections  = %w(additional_context backtrace)
         subject  = compose_subject(exception)
 
