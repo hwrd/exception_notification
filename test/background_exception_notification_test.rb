@@ -3,10 +3,11 @@ require 'test_helper'
 class BackgroundExceptionNotificationTest < ActiveSupport::TestCase
   setup do
     begin
+      @troublesome_object = "I like to cause problems."
       1/0
     rescue => e
       @exception = e
-      @mail = ExceptionNotifier::Notifier.background_exception_notification(@exception)
+      @mail = ExceptionNotifier::Notifier.background_exception_notification(@exception, :the_trouble_object => @troublesome_object)
     end
   end
 
@@ -34,8 +35,12 @@ class BackgroundExceptionNotificationTest < ActiveSupport::TestCase
     assert @mail.body.include? "A ZeroDivisionError occurred in background"
   end
 
+  test "mail should contain additional context" do
+    assert @mail.body.include? "I like to cause problems."
+  end
+
   test "mail should contain backtrace in body" do
-    assert @mail.body.include? "test/background_exception_notification_test.rb:6"
+    assert @mail.body.include? "test/background_exception_notification_test.rb:"
   end
 
   test "mail should not contain any attachments" do

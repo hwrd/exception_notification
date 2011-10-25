@@ -70,12 +70,13 @@ class ExceptionNotifier
       end
     end
 
-    def background_exception_notification(exception)
+    def background_exception_notification(exception, additional = {})
       if @notifier = Rails.application.config.middleware.detect{ |x| x.klass == ExceptionNotifier }
         @options = (@notifier.args.first || {}).reverse_merge(self.class.default_options)
         @exception = exception
         @backtrace = exception.backtrace || []
-        @sections  = %w{backtrace}
+        @additional_context = additional
+        @sections  = %w(additional_context backtrace)
         subject  = compose_subject(exception)
 
         mail(:to => @options[:exception_recipients], :from => @options[:sender_address], :subject => subject) do |format|

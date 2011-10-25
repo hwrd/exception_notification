@@ -1,0 +1,4 @@
+<% max = @additional_context.keys.max { |a, b| a.length <=> b.length } -%>
+<% @additional_context.keys.sort.each do |key| -%>
+* <%= raw("%-*s: %s" % [max.length, key, inspect_object(@additional_context[key])]) %>
+<% end -%>
