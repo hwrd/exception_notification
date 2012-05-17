@@ -65,7 +65,7 @@ class ExceptionNotifier
       end
       subject = compose_subject(exception, @kontroller)
 
-      mail(:to => @options[:exception_recipients], :from => @options[:sender_address], :subject => subject) do |format|
+      mail(:to => @options[:exception_recipients], :from => @options[:sender_address], :subject => subject, :tag => "exception-notification") do |format|
         format.text { render "#{mailer_name}/exception_notification" }
       end
     end
@@ -79,7 +79,7 @@ class ExceptionNotifier
         @sections  = %w(additional_context backtrace)
         subject  = compose_subject(exception)
 
-        mail(:to => @options[:exception_recipients], :from => @options[:sender_address], :subject => subject) do |format|
+        mail(:to => @options[:exception_recipients], :from => @options[:sender_address], :subject => subject, :tag => "exception-notification") do |format|
           format.text { render "#{mailer_name}/background_exception_notification" }
         end.deliver
       end
